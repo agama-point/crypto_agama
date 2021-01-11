@@ -117,6 +117,16 @@ def seedWords():
     return english_words_bip39.split(",")
 
 
+def numToHex(num):
+   # ret = num.to_bytes(((integer.bit_length() + 7) // 8),"big").hex()
+   ret = hex(num)
+   return ret
+
+
+def hexToNum(hex):
+  return int(hex, 16)
+
+
 def hexToBin(hexn):
   #bin(private_key1.to_bin())
   return (bin(int(hexn, base=16)))
@@ -144,7 +154,12 @@ def bin8tohex(strh):
    return tBs
 
 
-def strToBin(str):
+def str2bin(str_txt):
+  res = ''.join(format(ord(i), 'b') for i in str_txt)
+  return res
+
+
+def strToBin(str): # ?
   return bin(reduce(lambda x, y: 256*x+y, (ord(c) for c in str), 0))
 
 
