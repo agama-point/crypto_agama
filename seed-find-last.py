@@ -13,8 +13,7 @@ words_tbtc = "major easy ignore body rule stay gorilla eager arch actor scan tha
 words_test = "employ blouse total detect move attitude trophy space crystal size green naive"
 test_awsom = "quick brown fox ..."
 
-words_test11 = "11 " # verify
-
+words_test11 = "major easy ignore body rule stay gorilla eager arch actor scan "
 
 print("-"*30)
 
