@@ -3,6 +3,7 @@
 
 from crypto_agama.transform import seedWords
 
+
 print("-"*30)
 bip39 = seedWords()
 testBip = bip39[777],bip39[333]
@@ -21,7 +22,7 @@ for word in bip39:
     ##    print(word, lenw)
     lenArr[lenw] += 1
 
-   #if a1Dict[word[0]] in a1Dict.keys():
+    #if a1Dict[word[0]] in a1Dict.keys():
     if a1Dict.get(word[0])==None:
         a1Dict[word[0]] = 1
     else:       
