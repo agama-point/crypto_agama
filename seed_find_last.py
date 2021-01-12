@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 # agama_point: find last word from seed (around 128 validated)
 
 from crypto_agama.transform import seedWords
 from cryptos import * # pip install wheel, pbkdf2, cryptos
+
 
 bip39 = seedWords()
 
