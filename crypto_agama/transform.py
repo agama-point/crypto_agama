@@ -5,7 +5,7 @@ crypto_agama.transform
 import hashlib, binascii
 from hashlib import sha256
 # import ecdsa
-from crypto_agama.bip39josh import HashingFunctions
+# from crypto_agama.bip39josh import HashingFunctions
 
 """
 #Main Net (int dec prefix)
@@ -40,14 +40,14 @@ MAINNET_PREFIX = '80'
 TESTNET_PREFIX = 'EF'
 
 
-def hashString(string):
+def hash_sha256_str(string):
     """
     Return a SHA-256 hash of the given string
     """
     return sha256(string.encode('utf-8')).hexdigest()
 
 
-def convertToBase58(num):
+def convert_to_base58(num):
     sb = ''
 
     while (num > 0):
@@ -57,19 +57,19 @@ def convertToBase58(num):
     return sb[::-1]
 
 
-def numToWIF(numPriv,prefix=MAINNET_PREFIX,leading="1"):
+def num_to_wif(numPriv,prefix=MAINNET_PREFIX,leading="1",debug=DEBUG):
   privKeyHex = prefix+hex(numPriv)[2:].strip('L').zfill(64)
   privKeySHA256Hash = sha256(binascii.unhexlify(privKeyHex)).hexdigest()
   privKeyDoubleSHA256Hash = sha256(binascii.unhexlify(privKeySHA256Hash)).hexdigest()
   checksum = privKeyDoubleSHA256Hash[:8]
   wifNum = int(privKeyHex + checksum, 16)
-  if DEBUG: print("DEBUG-wifNum: ", wifNum)
-  wifNum58 = convertToBase58(wifNum)
-  if DEBUG: print("DEBUG-wifNum58: ", wifNum58)
+  if debug: print("DEBUG-wifNum: ", wifNum)
+  wifNum58 = convert_to_base58(wifNum)
+  if debug: print("DEBUG-wifNum58: ", wifNum58)
   return leading + wifNum58
 
 
-def WIFToNum(wifPriv):
+def wif_to_num(wifPriv):
     numPriv = 0
     for i in range(len(wifPriv)):
       numPriv += BASE_58_CHARS.index(wifPriv[::-1][i])*(BASE_58_CHARS_LEN**i)
@@ -78,11 +78,88 @@ def WIFToNum(wifPriv):
     return numPriv
 
 
-def isValidWIF(wifPriv):
+def num_to_hex(num):
+   # ret = num.to_bytes(((integer.bit_length() + 7) // 8),"big").hex()
+   ret = hex(num)
+   return ret
+
+
+def hex_to_num(hex):
+  return int(hex, 16)
+
+
+def hex_to_bin(hexn):
+  #bin(private_key1.to_bin())
+  return (bin(int(hexn, base=16)))
+
+
+def num_to_bin(num):
+   return (bin(int(num)))
+
+
+def bin_to_hex(binx):
+   return hex(int(binx, 2))
+
+
+def bin8_to_hex(strh):	
+   tB = []
+   tBs ="0x"	
+   #print("len:"+str(len(strh)))
+   try:
+     for ib in range (0,160):
+       Bapp = binToHex("0b"+str(strh)[2+ib*8:2+ib*8+8])	 
+       tB.append(Bapp)
+       print(Bapp,end="")
+       tBs = tBs+tB[ib][2:4]
+       #print ib,tB[ib]
+   except: 
+     err=True
+     print(ib,end="")
+
+   return tBs
+
+
+def str_to_bin(str_txt):
+  res = ''.join(format(ord(i), 'b') for i in str_txt)
+  return res
+
+
+def str_to_binX(str): # ?
+  return bin(reduce(lambda x, y: 256*x+y, (ord(c) for c in str), 0))
+
+
+def bin_to_str(bin):
+  n = int(bin, 2)
+  return binascii.unhexlify('%x' % n)
+
+
+def text_to_bits(text, encoding='utf-8', errors='surrogatepass'):
+    bits = bin(int(binascii.hexlify(text.encode(encoding, errors)), 16))[2:]
+    return bits.zfill(8 * ((len(bits) + 7) // 8))
+
+
+def text_from_bits(bits, encoding='utf-8', errors='surrogatepass'):
+    n = int(bits, 2)
+    return int2bytes(n).decode(encoding, errors)
+
+
+def int_to_bytes(i):
+    hex_string = '%x' % i
+    n = len(hex_string)
+    return binascii.unhexlify(hex_string.zfill(n + (n & 1))) 
+
+
+# ------------------------ crypto --------------------------
+def seed_words():
+    from crypto_agama.seed_english_words import english_words_bip39
+    return english_words_bip39.split(",")
+
+
+def is_valid_wif(wifPriv):
   return numToWIF(WIFToNum(wifPriv)) == wifPriv
 
 
-def numToAddress(numPriv):
+def num_to_address(numPriv):
     pko = ecdsa.SigningKey.from_secret_exponent(numPriv, CURVE_TYPE)
     pubkey = binascii.hexlify(pko.get_verifying_key().to_string())
     pubkeySHA256Hash = sha256(binascii.unhexlify('04' + pubkey)).hexdigest()
@@ -112,79 +189,6 @@ def numToAddress(numPriv):
     return '1' + address
 
 
-def seedWords():
-    from crypto_agama.seed_english_words import english_words_bip39
-    return english_words_bip39.split(",")
-
-
-def numToHex(num):
-   # ret = num.to_bytes(((integer.bit_length() + 7) // 8),"big").hex()
-   ret = hex(num)
-   return ret
-
-
-def hexToNum(hex):
-  return int(hex, 16)
-
-
-def hexToBin(hexn):
-  #bin(private_key1.to_bin())
-  return (bin(int(hexn, base=16)))
-
-
-def binToHex(binx):
-   return hex(int(binx, 2))
-
-
-def bin8tohex(strh):	
-   tB = []
-   tBs ="0x"	
-   #print("len:"+str(len(strh)))
-   try:
-     for ib in range (0,160):
-       Bapp = binToHex("0b"+str(strh)[2+ib*8:2+ib*8+8])	 
-       tB.append(Bapp)
-       print(Bapp,end="")
-       tBs = tBs+tB[ib][2:4]
-       #print ib,tB[ib]
-   except: 
-     err=True
-     print(ib,end="")
-
-   return tBs
-
-
-def str2bin(str_txt):
-  res = ''.join(format(ord(i), 'b') for i in str_txt)
-  return res
-
-
-def strToBin(str): # ?
-  return bin(reduce(lambda x, y: 256*x+y, (ord(c) for c in str), 0))
-
-
-def binToStr(bin):
-  n = int(bin, 2)
-  return binascii.unhexlify('%x' % n)
-
-
-def textToBits(text, encoding='utf-8', errors='surrogatepass'):
-    bits = bin(int(binascii.hexlify(text.encode(encoding, errors)), 16))[2:]
-    return bits.zfill(8 * ((len(bits) + 7) // 8))
-
-
-def textFromBits(bits, encoding='utf-8', errors='surrogatepass'):
-    n = int(bits, 2)
-    return int2bytes(n).decode(encoding, errors)
-
-
-def intToBytes(i):
-    hex_string = '%x' % i
-    n = len(hex_string)
-    return binascii.unhexlify(hex_string.zfill(n + (n & 1))) 
-
-# -------------------------------------------------------------
-
 def ent_to_phrase(entropy): 
     #tests to see if provided entropy produces desired word list
     hashes = HashingFunctions()
@@ -193,6 +197,7 @@ def ent_to_phrase(entropy):
     hashes.create_word_list()
     phrase = hashes.result_word_list
     return phrase
+
 
 def phrase_to_key(phrase): 
     #tests to see if word list converts to desired master key
