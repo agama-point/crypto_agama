@@ -11,14 +11,15 @@ bip39 = seedWords()
 words_book = "army van defense carry jealous true garbage claim echo media make crunch"
 words_tbtc = "major easy ignore body rule stay gorilla eager arch actor scan thank"
 words_test = "employ blouse total detect move attitude trophy space crystal size green naive"
+test_awsom = "quick brown fox ..."
 
-words_test11 = "major easy ignore body rule stay gorilla eager arch actor scan "
+words_test11 = "11 " # verify
+
 
 print("-"*30)
 
 num = 0
 for word in bip39:
-    from cryptos import * # pip install wheel, pbkdf2, cryptos
     words = words_test11 + word
    
     if (keystore.bip39_is_checksum_valid(words)[0]):
