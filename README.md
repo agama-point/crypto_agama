@@ -1,6 +1,9 @@
 # crypto_agama
 
-pip install wheel, pbkdf2, cryptos, bip_utils
+- pip install wheel
+- pip install pbkdf2
+- pip install cryptos
+- pip install bip_utils
 
 ---
 
