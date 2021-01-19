@@ -153,6 +153,10 @@ def int_to_bytes(i):
     return binascii.unhexlify(hex_string.zfill(n + (n & 1))) 
 
 
+def short_str(s,l=12):
+  return str(s[:l])+"..."+str(s[-l:])
+
+
 # ------------------------ crypto --------------------------
 def seed_words():
     from crypto_agama.seed_english_words import english_words_bip39
