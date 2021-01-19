@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from crypto_agama.transform import seedWords
+from crypto_agama.transform import seed_words
 
 
 print("-"*30)
-bip39 = seedWords()
+bip39 = seed_words()
 testBip = bip39[777],bip39[333]
 print("testBip: ", testBip)
 
@@ -13,7 +13,7 @@ print("testBip: ", testBip)
 lenArr = [0,0,0,0,0,0,0,0,0,0,0]
 a1Dict = {}
 anDict = {}
-an = 4
+an = 3
 
 print("-"*32) 
 
