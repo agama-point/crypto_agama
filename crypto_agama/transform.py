@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """
 crypto_agama.transform
 """
@@ -58,6 +61,7 @@ def convert_to_base58(num):
 
 
 def num_to_wif(numPriv,prefix=MAINNET_PREFIX,leading="1",debug=DEBUG):
+  # base58.b58encode_check(bytes).decode('utf8')
   privKeyHex = prefix+hex(numPriv)[2:].strip('L').zfill(64)
   privKeySHA256Hash = sha256(binascii.unhexlify(privKeyHex)).hexdigest()
   privKeyDoubleSHA256Hash = sha256(binascii.unhexlify(privKeySHA256Hash)).hexdigest()
@@ -204,3 +208,38 @@ def phrase_to_key(phrase):
     hashes = HashingFunctions(None, phrase)
     hashes.create_binary_seed()
     return hashes.binary_seed
+
+
+def create_root_key(seed_bytes,version_BYTES = "mainnet_private"):
+   import binascii, hmac, hashlib, base58
+   # the HMAC-SHA512 `key` and `data` must be bytes:
+   ##binascii.unhexlify(seed)
+
+   I = hmac.new(b'Bitcoin seed', seed_bytes, hashlib.sha512).digest()
+   L, R = I[:32], I[32:]
+   master_private_key = int.from_bytes(L, 'big')
+   master_chain_code = R
+
+   VERSION_BYTES = {
+      'mainnet_public': binascii.unhexlify('0488b21e'), 'mainnet_private': binascii.unhexlify('0488ade4'),
+      'testnet_public': binascii.unhexlify('043587cf'), 'testnet_private': binascii.unhexlify('04358394'),
+   }
+
+   print("version_BYTES: ", version_BYTES)
+
+   version_bytes = VERSION_BYTES[version_BYTES] #  testnet_public
+   depth_byte = b'\x00'
+   parent_fingerprint = b'\x00' * 4
+   child_number_bytes = b'\x00' * 4
+   key_bytes = b'\x00' + L
+   all_parts = (
+      version_bytes,       #  4 bytes  
+      depth_byte,          #  1 byte
+      parent_fingerprint,  #  4 bytes
+      child_number_bytes,  #  4 bytes
+      master_chain_code,   # 32 bytes
+      key_bytes,           # 33 bytes
+   )
+   all_bytes = b''.join(all_parts)
+   root_key = base58.b58encode_check(all_bytes).decode('utf8')
+   return root_key
