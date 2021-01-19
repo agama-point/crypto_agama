@@ -4,7 +4,11 @@
 # 2021/01 - fork: virtual_coin
 ver="v0.21-1" # show w+pk
 
+note = "..."
+
 from crypto_agama.agama_cryptos import create_wallet
+from crypto_agama.transform import short_str
+
 from priv_data import get_words # words
 import sys, os, time, random
 import pygame, pyqrcode 
@@ -83,7 +87,7 @@ ch1c = CheckBox(win,200,chyc);ch1c.initChBox("LTC")
 ch2c = CheckBox(win,330,chyc);ch2c.initChBox("tBTC")
 ch3c = CheckBox(win,460,chyc);ch3c.initChBox("BTC")
 
-bt1 = ButtBox(win,btx1,bty);bt1.labelButt("clear")        
+bt1 = ButtBox(win,btx1,bty);bt1.labelButt("clear")
 bt3 = ButtBox(win,btx1,bty+butty);bt3.labelButt("invert")
 bt5 = ButtBox(win,btx1,bty+butty*2);bt5.labelButt("noise")
 
@@ -125,7 +129,7 @@ def clickGen1(coin):
 def clickQr1():
         setMat(myMatrix,0)
         ## mxStr(win, myMatrix,coin,mxx,mxy)
-        """              
+        """
         mxStr(win, myMatrix,coin+".test: "+logTime,mxx,mxy)
         mxStr(win, myMatrix,wcoin,mxx,mxy+10)
         mxStr(win, myMatrix,ver,mxx,mxy+20)
@@ -135,13 +139,13 @@ def clickQr1():
         """
         filetPng = myDir+"tempqr.png" 
         qrx=5
-        qry=5
+        qry=3
 
         time.sleep(2)
 
-        createQR(wcoin,3)
+        createQR(wcoin,2) # size 2/3
         ## addLog(logFile,wcoin)
-        loadMatQR(win,filetPng,myMatrix,150,qry)
+        loadMatQR(win,filetPng,myMatrix,100,qry)
         obr = pygame.image.load(filetPng) 
         obrRect = obr.get_rect()
         obrRect = obrRect.move(200,0) #hX*2+100
@@ -157,12 +161,13 @@ def clickQr1():
 
         plotMat(win,myMatrix)
 
-        label = myFont.render(coin + " ("+ str(wnum) +")", 1, colBla)
-        win.blit(label, (30, 250))
+        laby = 200
+        label = myFont.render(coin + " ("+ str(wnum) +")  | " + note + " |", 1, colBla)
+        win.blit(label, (30, laby))
         label = myFont.render(wcoin, 1, colBla)
-        win.blit(label, (30, 262))
-        label = myFont.render(pcoin, 1, colBla)
-        win.blit(label, (30, 273))
+        win.blit(label, (30, laby+12))
+        label = myFont.render(short_str(pcoin,16), 1, colBla)
+        win.blit(label, (30, laby+25))
         doHriste(win) # ?
 
         createQR("123456789",1) #reset temp
@@ -252,7 +257,7 @@ while True:
                 invertMat(myMatrix)
                 plotMat(win,myMatrix)
                 print("time inv>" + str(time.time()-startTime))
-                
+
         if bt5.testClickButt(x,y): #noise
                 addnoiseMat(myMatrix)
                 #mxStr(win, myMatrix,"noise",5,155)
@@ -268,7 +273,7 @@ while True:
 
         if bt11.testClickButt(x,y): #info save
                 clickInfo() 
-             
+
         if bt4.testClickButt(x,y): #info load
                 print("---load---info---")
                 myBin = loadMat(win,filetPng,myMatrix,sel)
@@ -330,6 +335,6 @@ while True:
                   pygame.display.flip
                   startWin()
                   """
-     
+
      if event.type == pygame.QUIT:
                   sys.exit()
