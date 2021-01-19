@@ -4,7 +4,7 @@
 # 2021/01 - fork: virtual_coin
 ver="v0.21-1" # show w+pk
 
-note = "..."
+note = "major"
 
 from crypto_agama.agama_cryptos import create_wallet
 from crypto_agama.transform import short_str
@@ -162,7 +162,7 @@ def clickQr1():
         plotMat(win,myMatrix)
 
         laby = 200
-        label = myFont.render(coin + " ("+ str(wnum) +")  | " + note + " |", 1, colBla)
+        label = myFont.render(coin + " ("+ str(wnum) +")  | " + note + " | " + logTime, 1, colBla)
         win.blit(label, (30, laby))
         label = myFont.render(wcoin, 1, colBla)
         win.blit(label, (30, laby+12))
