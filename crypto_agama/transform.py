@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# crypto_agama.transform
 
-"""
-crypto_agama.transform
-"""
 
 import hashlib, binascii
 from hashlib import sha256
 # import ecdsa
-# from crypto_agama.bip39josh import HashingFunctions
+
 
 """
 #Main Net (int dec prefix)
@@ -193,7 +191,7 @@ def num_to_address(numPriv):
     address = ''
     for i in base58CharIndexList:
       address = BASE_58_CHARS[i] + address
-    
+
     return '1' + address
 
 
