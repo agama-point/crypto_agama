@@ -1,10 +1,12 @@
-# agama_point - crypto21
+# agama_point - crypto21 - 2021
 # https://wolovim.medium.com/ethereum-201-hd-wallets-11d0c93c87f7
 # generate, to_seed, to_hd_master_key(seed), to_mnemonic
 
+# seed_bytes => words + passphrase
+# to_hd_master_key / create_root_key
+
 from mnemonic import Mnemonic
-from crypto_agama.transform import *
-import base58
+from crypto_agama.transform import create_root_key
 
 TW = 80 # terminal width
 
@@ -14,11 +16,9 @@ print("-"*TW)
 print("agama_point - crypto21 - Bitcoin test")
 print("-"*TW)
 ##words = mnemo.generate(strength=128) # 128-256 (12/24)
-words_book = "army van defense carry jealous true garbage claim echo media make crunch"
-words_tbtc = "major easy ignore body rule stay gorilla eager arch actor scan thank"
-words_test = "employ blouse total detect move attitude trophy space crystal size green naive"
 
-words = words_tbtc
+from priv_data import get_words # words 
+words = get_words()
 print(words)
 
 #seed = mnemo.to_seed(words, passphrase="SuperDuperSecret")
@@ -35,94 +35,13 @@ print("entropy: ", entropy)
 
 print("-"*TW)
 
-"""
-bin = hexToBin(seed)
-print("bin", bin)
-
-num = seed
-
-privateKey = numToWIF(num,"EF")
-print("privateKey: ",privateKey)
-"""
-
-import binascii, hmac, hashlib
-# the HMAC-SHA512 `key` and `data` must be bytes:
-##binascii.unhexlify(seed)
-
-I = hmac.new(b'Bitcoin seed', seed_bytes, hashlib.sha512).digest()
-L, R = I[:32], I[32:]
-master_private_key = int.from_bytes(L, 'big')
-master_chain_code = R
-
-
-VERSION_BYTES = {
-   'mainnet_public': binascii.unhexlify('0488b21e'), 'mainnet_private': binascii.unhexlify('0488ade4'),
-   'testnet_public': binascii.unhexlify('043587cf'), 'testnet_private': binascii.unhexlify('04358394'),
-}
-
-version_BYTES = "mainnet_private"
-print("version_BYTES: ", version_BYTES)
-
-version_bytes = VERSION_BYTES[version_BYTES] #  testnet_public
-depth_byte = b'\x00'
-parent_fingerprint = b'\x00' * 4
-child_number_bytes = b'\x00' * 4
-key_bytes = b'\x00' + L
-all_parts = (
-    version_bytes,      # 4 bytes  
-    depth_byte,         # 1 byte
-    parent_fingerprint,  # 4 bytes
-    child_number_bytes, # 4 bytes
-    master_chain_code,  # 32 bytes
-    key_bytes,          # 33 bytes
-)
-all_bytes = b''.join(all_parts)
-root_key = base58.b58encode_check(all_bytes).decode('utf8')
-print("root_key: ", root_key)
-
-print("root_www: ", "xprv9s21ZrQH143K3Lkdp2LWERaQjMDcGfCLLVrB3QsKmxNPqrwAcGimMY8c3p95mwDieoNAE19rKNqH3FnhiEBFxUa2RWUThPxYjdQ64HQ82Lw")
+print("create_root_key: ", create_root_key(seed_bytes))
+print("_______root_www: ", "xprv9s21ZrQH143K3Lkdp2LWERaQjMDcGfCLLVrB3QsKmxNPqrwAcGimMY8c3p95mwDieoNAE19rKNqH3FnhiEBFxUa2RWUThPxYjdQ64HQ82Lw")
 # xprv9s21ZrQH143K...T2emdEXVYsCzC2U
 
-print("-"*TW)
-
-"""
-from ecdsa import SECP256k1
-from ecdsa.ecdsa import Public_key
-SECP256k1_GEN = SECP256k1.generator
-def serialize_curve_point(p):
-   x, y = K.x(), K.y()
-   if y & 1:
-      return b'\x03' + x.to_bytes(32, 'big')
-   else:
-      return b'\x02' + x.to_bytes(32, 'big')
-    
-def curve_point_from_int(k):
-   return Public_key(SECP256k1_GEN, SECP256k1_GEN * k).point
-
-def fingerprint_from_private_key(k):
-   K = curve_point_from_int(k)
-   K_compressed = serialize_curve_point(K)
-   identifier = hashlib.new(
-      'ripemd160',
-      hashlib.sha256(K_compressed).digest(),
-   ).digest()
-   return identifier[:4]
-
-depth = 0
-parent_fingerprint = None
-child_number = None
-private_key = master_private_key
-chain_code = master_chain_code
-
-p = curve_point_from_int(private_key)
-public_key_bytes = serialize_curve_point(p)
-print(f'public key: 0x{public_key_bytes.hex()}')
-"""
 
 print("-"*TW)
-print("cryptos")
-print("-"*TW)
-
+print("cryptos:")
 
 # https://github.com/primal100/pybitcointools
 from cryptos import * # pip install wheel, pbkdf2, cryptos
@@ -168,6 +87,24 @@ print("wallet.privkey: ", wpk1)
 print("-"*TW)
 addr2 = wallet.new_change_address()
 print("addr2: ", addr2)
+
+print("-"*TW)
+
+# ---------------------------------------------------------------
+"""
+print("BIP84-test")
+words_84 = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+#https://github.com/bitcoin/bips/blob/master/bip-0084.mediawiki
+words = words_84
+print(words)
+seed_bytes = mnemo.to_seed(words, passphrase="")
+xprv = mnemo.to_hd_master_key(seed_bytes)
+print("mnemo.to_hd_master_key = xprv: ", xprv) 
+print("create_root_key: ", create_root_key(seed_bytes))
+"""
+
+print("--- blockcypher ---")
+
 
 
 print("ok")
