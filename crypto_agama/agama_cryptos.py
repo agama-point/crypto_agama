@@ -2,6 +2,9 @@ from cryptos import * # pip install wheel, pbkdf2, cryptos
 from mnemonic import Mnemonic
 from crypto_agama.transform import create_root_key
 
+# https://pypi.org/project/cryptos/
+# https://github.com/primal100/pybitcointools
+
 
 def create_wallet(words, c="tBTC", wnum = 0, debug=True): # tBTC/BTC/LTC
 
@@ -15,6 +18,7 @@ def create_wallet(words, c="tBTC", wnum = 0, debug=True): # tBTC/BTC/LTC
     if (c=="LTC"): coin = Litecoin(testnet=False)
     if (c=="BTC"): coin = Bitcoin(testnet=False)
     if (c=="tBTC"): coin = Bitcoin(testnet=True)
+    if (c=="tLTC"): coin = Litecoin(testnet=True)
 
     wallet = coin.wallet(words)
 
