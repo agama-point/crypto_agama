@@ -84,8 +84,9 @@ ch2 = CheckBox(win,330,chy);ch2.initChBox("select 1")
 ch3 = CheckBox(win,460,chy);ch3.initChBox("select 2")
 
 ch1c = CheckBox(win,200,chyc);ch1c.initChBox("LTC")
-ch2c = CheckBox(win,330,chyc);ch2c.initChBox("tBTC")
+ch2c = CheckBox(win,330,chyc);ch2c.initChBox("tLTC")
 ch3c = CheckBox(win,460,chyc);ch3c.initChBox("BTC")
+ch4c = CheckBox(win,590,chyc);ch4c.initChBox("tBTC")
 
 bt1 = ButtBox(win,btx1,bty);bt1.labelButt("clear")
 bt3 = ButtBox(win,btx1,bty+butty);bt3.labelButt("invert")
@@ -241,11 +242,13 @@ while True:
         if (ch2.getChBox() and ch3.getChBox()): wnum = 3
         ch1c.setChBox(x,y)
         ch2c.setChBox(x,y)
-        ch3c.setChBox(x,y)	
+        ch3c.setChBox(x,y)
+        ch4c.setChBox(x,y)
 
         if (ch1c.getChBox()): coin = "LTC"
-        if (ch2c.getChBox()): coin = "tBTC"
+        if (ch2c.getChBox()): coin = "tLTC"
         if (ch3c.getChBox()): coin = "BTC"
+        if (ch4c.getChBox()): coin = "tBTC"
         
         if bt1.testClickButt(x,y): #clear
                 setMat(myMatrix,0)
