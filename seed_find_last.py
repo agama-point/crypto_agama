@@ -2,15 +2,11 @@
 # -*- coding: utf-8 -*-
 # agama_point: find last word from seed (around 128 validated)
 
-from crypto_agama.transform import seedWords
+from crypto_agama.transform import seed_words
 from cryptos import * # pip install wheel, pbkdf2, cryptos
+# from priv_data import get_words # words
 
-
-bip39 = seedWords()
-
-words_book = "army van defense carry jealous true garbage claim echo media make crunch"
-words_tbtc = "major easy ignore body rule stay gorilla eager arch actor scan thank"
-words_test = "employ blouse total detect move attitude trophy space crystal size green naive"
+bip39 = seed_words()
 
 words_test11 = "major easy ignore body rule stay gorilla eager arch actor scan "
 
