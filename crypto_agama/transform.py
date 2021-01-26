@@ -1,12 +1,44 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# crypto_agama.transform
-
+# crypto_agama.transform 2016-21
 
 import hashlib, binascii
 from hashlib import sha256
-# import ecdsa
+import ecdsa
 
+DEBUG = True
+
+"""
+num_to_hex(255)    # '0xff'
+hex_to_num('0xff') # 255
+num_to_bin(123)    # '0b1111011'
+hex_to_bin('0xff') # '0b11111111'
+bin_to_hex('0b11111111') # '0xff'
+str_to_hex("abc")  # '616263' # ASCII
+str_to_bin("abc")  #'110000111000101100011'
+bin_to_str('110000111000101100011') # x?  b'\x18qc'
+bin8_to_hex?
+bin_to_str?
+int_to_bytes?
+
+short_str("abcdefghijklmnopqrtsuvwxyz")    # 'abcdefghijkl...opqrtsuvwxyz'
+short_str("abcdefghijklmnopqrtsuvwxyz",3)  # 'abc...xyz'
+text_to_bits("abc")                        # '011000010110001001100011'
+text_from_bits('011000010110001001100011') # 'abc'
+
+hash_sha256_str("agama") # '52589fac98630c603bd5c2b08cb0f6ccf273cc4a4772f0ff28d49a01bc7d2f4b'
+
+hashhex = hash_sha256_str("agama")
+hashnum = int(hashhex, 16)
+convert_to_base58(hashnum) # '6YSp1VMaYGo5enJRFFwhhcNmrhGWPmJgSZqiS2sv3fwQ'
+
+num_to_wif 
+wif_to_num 
+is_valid_wif
+seed_words 
+num_to_address
+
+"""
 
 """
 #Main Net (int dec prefix)
@@ -29,10 +61,7 @@ secp256k1point = ecdsa.ellipticcurve.Point(secp256k1curve, gX,	gY, n)
 CURVE_TYPE = ecdsa.curves.Curve('secp256k1', secp256k1curve, secp256k1point, (1, 3, 132, 0, 10))
 #"""
 
-
-DEBUG = True
-
-# CURVE_TYPE = ecdsa.curves.SECP256k1
+CURVE_TYPE = ecdsa.curves.SECP256k1
 
 BASE_58_CHARS = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 BASE_58_CHARS_LEN = len(BASE_58_CHARS)
@@ -121,13 +150,15 @@ def bin8_to_hex(strh):
    return tBs
 
 
+def str_to_hex(str_txt):
+  s = str_txt.encode('utf-8')
+  return s.hex()
+
+
 def str_to_bin(str_txt):
+  # res = bin(reduce(lambda x, y: 256*x+y, (ord(c) for c in str), 0))
   res = ''.join(format(ord(i), 'b') for i in str_txt)
   return res
-
-
-def str_to_binX(str): # ?
-  return bin(reduce(lambda x, y: 256*x+y, (ord(c) for c in str), 0))
 
 
 def bin_to_str(bin):
@@ -142,7 +173,7 @@ def text_to_bits(text, encoding='utf-8', errors='surrogatepass'):
 
 def text_from_bits(bits, encoding='utf-8', errors='surrogatepass'):
     n = int(bits, 2)
-    return int2bytes(n).decode(encoding, errors)
+    return int_to_bytes(n).decode(encoding, errors)
 
 
 def int_to_bytes(i):
