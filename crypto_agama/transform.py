@@ -4,7 +4,7 @@
 
 import hashlib, binascii
 from hashlib import sha256
-import ecdsa
+# import ecdsa
 
 DEBUG = True
 
@@ -39,29 +39,6 @@ seed_words
 num_to_address
 
 """
-
-"""
-#Main Net (int dec prefix)
-128	80	Private key (WIF, compressed pubkey)
-# Test Net (int dec prefix)
-111	6F	Testnet pubkey hash
-196	C4	Testnet script hash
-239	EF	Testnet Private key (WIF, uncompressed pubkey)
-
-# secp256k1 T = (p, a, b, G, n, h)
-p = 2**256 - 2**32 - 2**9 - 2**8 - 2**7 - 2**6 - 2**4 - 1 # The proven prime
-
-gX = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798 # generator point
-gY = 0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8 # generator point
-n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141  # Number of points in the field
-a = 0; b = 7 # from elliptic curve equation y^2 = x^3 + a*x + b
-
-secp256k1curve = ecdsa.ellipticcurve.CurveFp(p, a, b)
-secp256k1point = ecdsa.ellipticcurve.Point(secp256k1curve, gX,	gY, n)
-CURVE_TYPE = ecdsa.curves.Curve('secp256k1', secp256k1curve, secp256k1point, (1, 3, 132, 0, 10))
-#"""
-
-CURVE_TYPE = ecdsa.curves.SECP256k1
 
 BASE_58_CHARS = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 BASE_58_CHARS_LEN = len(BASE_58_CHARS)
@@ -184,6 +161,27 @@ def int_to_bytes(i):
 
 def short_str(s,l=12):
   return str(s[:l])+"..."+str(s[-l:])
+
+
+# ------------------------ hexdump -------------------------
+def group(a, *ns):
+  for n in ns:
+    a = [a[i:i+n] for i in range(0, len(a), n)]
+  return a
+
+
+def join(a, *cs):
+  return [cs[0].join(join(t, *cs[1:])) for t in a] if cs else a
+
+
+def hexdump(data):
+  toHex = lambda c: '{:02X}'.format(c)
+  toChr = lambda c: chr(c) if 32 <= c < 127 else '.'
+  make = lambda f, *cs: join(group(list(map(f, data)), 8, 2), *cs)
+  hs = make(toHex, '  ', ' ')
+  cs = make(toChr, ' ', '')
+  for i, (h, c) in enumerate(zip(hs, cs)):
+    print ('{:010X}: {:48}  {:16}'.format(i * 16, h, c))
 
 
 # ------------------------ crypto --------------------------
