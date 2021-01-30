@@ -12,6 +12,7 @@ DEBUG = True
 num_to_hex(255)    # '0xff'
 hex_to_num('0xff') # 255
 num_to_bin(123)    # '0b1111011'
+num_to_bin(123, True) # '1111011' # to string
 hex_to_bin('0xff') # '0b11111111'
 bin_to_hex('0b11111111') # '0xff'
 str_to_hex("abc")  # '616263' # ASCII
@@ -96,13 +97,21 @@ def hex_to_num(hex):
   return int(hex, 16)
 
 
-def hex_to_bin(hexn):
+def hex_to_bin(hexn, to_string = False):
   #bin(private_key1.to_bin())
-  return (bin(int(hexn, base=16)))
+  _bin = bin(int(hexn, base=16))
+  if to_string:
+    return str(_bin)[2:]
+  else:
+    return _bin
 
 
-def num_to_bin(num):
-   return (bin(int(num)))
+def num_to_bin(num, to_string = False):
+  _bin = bin(int(num))
+  if to_string:
+    return str(_bin)[2:]
+  else:
+    return _bin
 
 
 def bin_to_hex(binx):
