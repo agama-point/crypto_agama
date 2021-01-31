@@ -30,7 +30,7 @@ def caesar_encrypt(text,s,up=True):
 
 
 
-""" polybios code
+""" polybius code - basic an simple way:
 - 1 2 3 4 5
 1 A B C D E
 2 F G H I K
@@ -46,7 +46,7 @@ p1 = {
 "V": "51", "W": "52", "X": "53", "Y": "54", "Z": "55"
 }
 
-def polybios_decrypt(text, p=p1):
+def polybius_decrypt(text, p=p1):
    polyb = ""
    for ch in text:
       try:
@@ -57,3 +57,21 @@ def polybios_decrypt(text, p=p1):
       except:
          print("polybios_decrypt.Err")
    return polyb
+
+
+# function to display polybius cipher text 
+def polybius_cipher(s): 
+   for char in s:
+
+      row = int((ord(char) - ord('a')) / 5) + 1 # finding row of the table
+      col = ((ord(char) - ord('a')) % 5) + 1 # finding column of the table
+      if char == 'k': 
+            row = row - 1
+            col = 5 - col + 1
+      # if character is greater than 'j' 
+      elif ord(char) >= ord('j'): 
+            if col == 1 : 
+                  col = 6
+                  row = row - 1
+            col = col - 1
+      print(row, col, end ='', sep ='')
