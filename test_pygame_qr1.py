@@ -2,9 +2,7 @@
 #-----------------------
 # 2017/11/14 - v01.ok
 # 2021/01 - fork: virtual_coin
-ver="v0.21-1" # show w+pk
-
-note = "major"
+ver="2021-01" # show w+pk
 
 from crypto_agama.agama_cryptos import create_wallet
 from crypto_agama.transform import short_str
@@ -19,16 +17,17 @@ from datetime import datetime
 
 coin = "tBTC" #LTC,NMC,VTC
 words = get_words()
+words_arr = words.split()
+note = words_arr[0] + "|" + words_arr[11]
 
 # words = "..."
-
 print(words)
 wnum = 0
 
 startTime = time.time()
-pygame.init()
 
 from oeLib.oePygame import *
+pygame.init()
 
 myMatrix={}     # main
 font={}             # font from extern file
@@ -114,12 +113,14 @@ def clickOctop():
   print("time plot>" + str(time.time()-startTime))
 
 def clickGen1(coin):
+        passphrase = ""
         global pcoin,wcoin
         print("---gen1--- cioin: ", coin, wnum)
         
         print("time info>" + str(time.time()-startTime))
         
-        w = create_wallet(words,coin,wnum)
+        # w = create_wallet(words,coin,wnum)
+        w = create_wallet(words, passphrase=passphrase, c=coin, wnum=wnum)
         print("root_key: ", w[3]) # create_root_key(seed_bytes)
 
         wcoin = w[0]
