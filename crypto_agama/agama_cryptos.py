@@ -6,11 +6,11 @@ from crypto_agama.transform import create_root_key
 # https://github.com/primal100/pybitcointools
 
 
-def create_wallet(words, c="tBTC", wnum = 0, debug=True): # tBTC/BTC/LTC
+def create_wallet(words, passphrase="", c="tBTC", wnum = 0, debug=True): # tBTC/BTC/LTC
 
     mnemo = Mnemonic("english")
     #seed = mnemo.to_seed(words, passphrase="SuperDuperSecret")
-    seed_bytes = mnemo.to_seed(words, passphrase="")
+    seed_bytes = mnemo.to_seed(words, passphrase)
 
     xprv = mnemo.to_hd_master_key(seed_bytes)
     entropy = mnemo.to_entropy(words)
@@ -32,10 +32,10 @@ def create_wallet(words, c="tBTC", wnum = 0, debug=True): # tBTC/BTC/LTC
       addr = wallet.new_change_address()
       wpk = wallet.privkey(addr)
 
-    if wnum == 2:
-      addr = wallet.new_change_address()
-      addr = wallet.new_change_address()
-      wpk = wallet.privkey(addr)
+    if wnum > 1:
+      for gen in range(wnum):
+        addr = wallet.new_change_address()
+        wpk = wallet.privkey(addr)
 
     deriv = wallet.keystore.root_derivation # "m/44'/0'/0'"
 
