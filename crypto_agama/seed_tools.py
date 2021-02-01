@@ -5,7 +5,7 @@
 
 
 from mnemonic import Mnemonic
-from .transform import short_str, convert_to_base58
+from .transform import str_to_hex, short_str, convert_to_base58
 from .cipher import caesar_encrypt
 from hashlib import sha256
 import hashlib, binascii, base58
@@ -26,10 +26,11 @@ def seed_words():
     from crypto_agama.seed_english_words import english_words_bip39
     return english_words_bip39.split(",")
 
+bip39 = seed_words()
+
 
 def mnemonic_info(words,short=True):
   from cryptos import keystore
-  bip39 = seed_words()
   if short: print(short_str(words),end=" ")
   else: print(words)
 
@@ -43,6 +44,58 @@ def mnemonic_info(words,short=True):
 
   print()
   print("validate: ", keystore.bip39_is_checksum_valid(words))
+
+
+def generate_seed11(pattern):
+    bits = pattern*int(256/len(pattern))
+    print(bits) # 132 bits
+    bw = 11 # BIP39 words 2048 == 11 bits
+    words11 = ""
+
+    for i in range(11): # 12 words: 11 + 1 chceksum
+        wordbits = bits[bw*i:bw*(i+1)]
+        wordindex = int(wordbits, 2) #bin2num
+        #wordindex = int(f'{wordbits:#0}')
+        try:
+            word = bip39[wordindex]
+            words11 +=  word + " "
+        except:
+            word = "err"
+        print(i+1, wordbits, wordindex, word)
+    return words11
+
+
+def generate_seed11_num(numbers, multi=1): # multi: 1,2,3 max (3*999?)
+    numbers = str(numbers)*2
+    bw = 11
+    words11 = ""
+
+    for i in range(bw): # 12 words: 11 + 1 chceksum
+        num3 = int(numbers[i*3:i*3+3])*multi 
+        try:
+            word = bip39[num3]
+            words11 +=  word + " "
+        except:
+            word = "err"
+        print(i+1, num3, word)
+    return words11
+
+
+def generate_seed11_txt(text, multi=1): # multi: 1,2,3 max (3*999?)
+    text_hex = str(str_to_hex(text))
+    print(text_hex)
+    bw = 11
+    words11 = ""
+
+    for i in range(bw): # 12 words: 11 + 1 chceksum
+        num = int(text_hex[i*2:i*2+2],16)
+        try:
+            word = bip39[num]
+            words11 +=  word + " "
+        except:
+            word = "err"
+        print(i+1, num, word)
+    return words11
 
 
 def words_to_bip39nums(words):
