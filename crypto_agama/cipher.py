@@ -8,7 +8,7 @@ print "Cipher: " + caesar_encrypt(text,s)
 """
 
 
-def caesar_encrypt(text,s,up=True):
+def caesar_encrypt(text,s=13,up=True):
    result = ""
 
    for i in range(len(text)):
