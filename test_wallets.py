@@ -5,6 +5,7 @@
 from mnemonic import Mnemonic
 from crypto_agama.transform import *
 from crypto_agama.seed_tools import *
+from priv_data import get_seeds, get_words # words
 from crypto_agama.agama_cryptos import create_wallet
 import base58
 
@@ -17,9 +18,10 @@ print("-"*TW)
 mnemo = Mnemonic("english")
 print("Mnemonic Language: english")
 
-##words = mnemo.generate(strength=128) # 128-256 (12/24)
-words = "army van defense carry jealous true garbage claim echo media make crunch"
-#passphrase = "test"
+# words = mnemo.generate(strength=128) # 128-256 (12/24)
+# words = "army van defense carry jealous true garbage claim echo media make crunch"
+words = get_words()
+# passphrase = "test"
 passphrase = ""
 
 print("BIP39 Mnemonic: ", words)
@@ -28,7 +30,7 @@ print("-"*TW)
 print("--- BIP39 Seed ---") 
 
 print("BIP39 Passphrase (optional): ", passphrase)
-seed_bytes = mnemo.to_seed(words, passphrase=passphrase)
+seed_bytes = mnemo.to_seed(words, passphrase)
 #seed_bytes = mnemo.to_seed(words, passphrase="")
 # print("mnemo.to_seed = seed_bytes: ", seed_bytes)
 
@@ -57,18 +59,21 @@ print("BIP32 | BIP44 | BIP49 | BIP84 | BIP141")
 
 
 #def create_wallet(words, passphrase="", c="tBTC", wnum = 0, debug=True): # tBTC/BTC/LTC
+coins_dict = {"BTC":"/BTC/", "tBTC":"/BTCTEST/", "LTC":"/LTC/", "tLTC":"/LTCTEST/"}
+passphrase=""
+coin = "tBTC"
+url_coin = coins_dict[coin]
+w = create_wallet(words,passphrase,coin, 0)
 
-w = create_wallet(words, passphrase=passphrase, c="BTC")
+
 wcoin, pcoin = w[0],  w[1]
 print("wallet-priv: ", pcoin)
 print("wallet-pub:  ", wcoin)
 print(w[2])
 
 print("---")
-w = create_wallet(words, passphrase=passphrase, c="BTC",wnum=1)
+w = create_wallet(words, passphrase, coin,wnum=1)
 wcoin, pcoin = w[0],  w[1]
 print("wallet-priv: ", pcoin)
 print("wallet-pub:  ", wcoin)
 print(w[2])
-
-print("ok")
