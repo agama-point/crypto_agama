@@ -1,6 +1,10 @@
+# 2021-02-01
+
 from crypto_agama.transform import *
+from crypto_agama.seed_tools import *
 
 num = 123456789012345678901 # 21)
+wallet_privkey =  "cRM9QqeyGSo44gccBZKoLu4JwHXr5EK3AhrXy7QQFeRmr9aGPcKh"
 # num = 1024 # 21)
 
 print("_______num: ", num)
@@ -47,6 +51,10 @@ print("bin_str: ", bin)
 
 
 print("-"*63)
+
+print("wallet_privkey: ", wallet_privkey)
+bin2 = str_to_bin(wallet_privkey)
+print("bin: ", bin2)
 
 
 
