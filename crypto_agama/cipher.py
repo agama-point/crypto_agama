@@ -75,3 +75,54 @@ def polybius_cipher(s):
                   row = row - 1
             col = col - 1
       print(row, col, end ='', sep ='')
+
+
+f7_1 = ((0,1),(0,4),(0,5),(1,2),(2,1),(2,4),(3,0),(3,4),(4,0),(5,1),(5,3),(6,6))
+# t48 = "123456789012345678901234567890123456789012345678x" #48+1
+
+# ccw: counterclockwise
+
+def fleissner_decrypt(text, f=f7_1, mf=7,center="A", ccw = True, debug=True):
+   f_temp ="-"*mf*mf
+   print(text,len(text))
+   # f_temp[0] = center
+   i = int(3*mf + 3)
+   f_temp = f_temp[:i] + center + f_temp[i:]
+   if debug: print(f_temp, len(f_temp))
+   
+   # part1
+   fl = list(f)
+   fln = fl
+
+   _i = 0
+   _ii = 0
+
+   for rotate in range(4):
+      if debug:
+         print("----- rotate ", rotate)
+         print(fl)
+      _i = 0
+
+      for xy in fl:
+         i = int(xy[0]*mf + xy[1])
+         f_temp = f_temp[:i] + text[_ii] + f_temp[i+1:]
+         if ccw: fln[_i] = (mf - fl[_i][1] - 1, fl[_i][0])
+         else:   fln[_i] = (fl[_i][0], mf - fl[_i][1] - 1)
+         # print(_i, i, "=== ", f[_i],  fl[_i], text[i])
+         _i += 1
+         _ii += 1
+
+      if debug:
+         print(f_temp)
+         print("fln    ",fl)
+      fl = fln
+      if ccw: fl = sorted(fl, key=lambda tup: tup[0]*10+tup[1])
+      else: fl = sorted(fl, key=lambda tup: tup[1]*10+tup[0])
+      if debug: print("sorted ",fl)
+
+   _j = 0
+   for x in range(mf):
+      for y in range(mf):
+         print(f_temp[_j], end = " ")
+         _j += 1
+      print()
